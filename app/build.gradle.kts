@@ -60,6 +60,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.gson)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.constraintlayout)
     ksp(libs.google.dagger.hilt.compiler)
     implementation(libs.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
