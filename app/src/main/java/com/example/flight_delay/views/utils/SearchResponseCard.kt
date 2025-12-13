@@ -43,7 +43,7 @@ fun SearchResponseCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(320.dp),
+            .height(290.dp),
         shape = RoundedCornerShape(26.dp),
         colors = CardDefaults.cardColors(containerColor = cardBg),
         elevation = CardDefaults.cardElevation(8.dp)
@@ -52,7 +52,7 @@ fun SearchResponseCard(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 16.dp),
+                .padding(vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -67,7 +67,8 @@ fun SearchResponseCard(
 
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -108,7 +109,7 @@ fun SearchResponseCard(
 
 
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(8.dp))
 
 
             Row(
