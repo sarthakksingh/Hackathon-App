@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.flight_delay"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.gson)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.constraintlayout)
     ksp(libs.google.dagger.hilt.compiler)
     implementation(libs.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
