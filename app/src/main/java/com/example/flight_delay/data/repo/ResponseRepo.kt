@@ -8,12 +8,14 @@ import javax.inject.Inject
 
 class ResponseRepo @Inject constructor(
     private val responseApi: ResponseApi
-){
-    suspend fun getFlightDetails(request: Request): Response{
-        return try{
+) {
+
+    suspend fun getFlightDetails(request: Request): Response? {
+        return try {
             responseApi.getDetails(request)
-        }catch (e: Exception){
-            Log.e("SaveForLaterRepo", "Failed to add to save for later", e)
-        } as Response
+        } catch (e: Exception) {
+            Log.e("ResponseRepo", "Failed to fetch flight details", e)
+            null
+        }
     }
 }
