@@ -29,7 +29,8 @@ import com.example.flight_delay.views.utils.SearchInputCard
 
 @Composable
 fun SearchScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onNavigateToResult: (origin: String, destination: String, timeDate: String) -> Unit
 ) {
 
 
@@ -79,16 +80,10 @@ fun SearchScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
 
-            SearchInputCard()
+            SearchInputCard(onNavigateToResult)
 
             Spacer(modifier = Modifier.height(20.dp))
 
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun SearchScreenPreview() {
-    SearchScreen(onBackClick = {})
 }

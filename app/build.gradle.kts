@@ -100,6 +100,13 @@ dependencies {
 
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("com.google.accompanist:accompanist-swiperefresh:0.32.0")
+
+    // core is mandatory
+    implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.3.0")
+
+    // calendar & clock modules
+    implementation("com.maxkeppeler.sheets-compose-dialogs:calendar:1.3.0")
+    implementation("com.maxkeppeler.sheets-compose-dialogs:clock:1.3.0")
 }
 fun getBaseUrlInCIEnvironment(): String {
     val propFile = rootProject.file("local.properties")
