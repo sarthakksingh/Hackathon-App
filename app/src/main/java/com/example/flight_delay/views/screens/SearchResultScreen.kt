@@ -16,6 +16,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,11 +34,21 @@ import com.example.flight_delay.R
 import com.example.flight_delay.data.model.InputUsed
 import com.example.flight_delay.data.model.Response
 import com.example.flight_delay.views.utils.SearchResponseCard
+import kotlinx.coroutines.delay
 
 @Composable
 fun SearchResultScreen(
     onBackClick: () -> Unit
 ) {
+
+    // 🔹 Loading state
+    var isLoading by remember { mutableStateOf(true) }
+
+    // 🔹 Simulate API delay
+    LaunchedEffect(Unit) {
+        delay(2000) // ⏳ 2 seconds
+        isLoading = false
+    }
 
     val mockResponse = Response(
         prediction = "Delayed",

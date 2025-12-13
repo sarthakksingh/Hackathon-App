@@ -45,7 +45,7 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchInputCard(
-    onSearchClick: (origin: String, destination: String, timeDate: String) -> Unit
+    onCheckDelayClick: () -> Unit
 ) {
     var origin by remember { mutableStateOf("") }
     var destination by remember { mutableStateOf("") }
@@ -190,9 +190,7 @@ fun SearchInputCard(
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
-                onClick = {
-                    onSearchClick(origin, destination, departureText)
-                },
+                onClick = onCheckDelayClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -203,3 +201,7 @@ fun SearchInputCard(
         }
     }
 }
+
+
+
+
