@@ -43,7 +43,7 @@ fun SearchResponseCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(290.dp),
+            .height(300.dp),
         shape = RoundedCornerShape(26.dp),
         colors = CardDefaults.cardColors(containerColor = cardBg),
         elevation = CardDefaults.cardElevation(8.dp)
