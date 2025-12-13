@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -12,15 +15,16 @@ android {
 
     defaultConfig {
         applicationId = "com.example.flight_delay"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", getBaseUrlInCIEnvironment())
     }
-
     buildTypes {
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -38,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -93,4 +98,10 @@ dependencies {
 
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("com.google.accompanist:accompanist-swiperefresh:0.32.0")
+}
+fun getBaseUrlInCIEnvironment(): String {
+    val propFile = rootProject.file("local.properties")
+    val properties = Properties()
+    properties.load(FileInputStream(propFile))
+    return properties.getProperty("BASE_URL")
 }
