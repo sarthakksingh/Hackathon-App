@@ -10,11 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -23,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,124 +36,122 @@ fun SearchResponseCard(
     response: Response
 ) {
     val probabilityPercent = (response.probability * 100).toInt()
-    val isDelayed = response.prediction.equals("Delayed", true)
+    val isDelayed = response.prediction.equals("Delayed", ignoreCase = true)
 
+    val screenBg = Color(0xFF310581)
+    val cardBg = Color(0xFFB091D5)
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp), // ⬅️ Taller card
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFB091D5)
-        ),
+            .height(290.dp),
+        shape = RoundedCornerShape(26.dp),
+        colors = CardDefaults.cardColors(containerColor = cardBg),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // BIG airline logo
+
             Image(
                 painter = painterResource(airlineLogo(response.input_used.airline)),
                 contentDescription = null,
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(100.dp)
             )
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(8.dp))
 
-            // Route text
+
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(response.input_used.origin, fontWeight = FontWeight.Bold)
-                Text(response.input_used.destination, fontWeight = FontWeight.Bold)
+                Text(
+                    text = response.input_used.origin,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp
+                )
+                Text(
+                    text = response.input_used.destination,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp
+                )
             }
 
             Spacer(Modifier.height(6.dp))
 
-            // Small airplane route
+
             Image(
                 painter = painterResource(R.drawable.line_airple_blue),
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(18.dp),
-                contentScale = ContentScale.FillWidth
+                    .height(28.dp),
+                contentScale = ContentScale.FillWidth,
+                colorFilter = ColorFilter.tint(Color(0xFF310581))
             )
 
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(12.dp))
 
-            // Perforated dashed line
-            Box(
+            Image(
+                painter = painterResource(R.drawable.dash_line),
+                contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(14.dp)
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.dash_line),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth(),
-                    contentScale = ContentScale.FillWidth
-                )
+                    .fillMaxWidth(),
+                contentScale = ContentScale.FillWidth,
+                colorFilter = ColorFilter.tint(Color(0xFF310581))
+            )
 
-                Box(
-                    modifier = Modifier
-                        .size(16.dp)
-                        .background(Color(0xFF310581), CircleShape)
-                        .align(Alignment.CenterStart)
-                        .offset(x = (-8).dp)
-                )
 
-                Box(
-                    modifier = Modifier
-                        .size(16.dp)
-                        .background(Color(0xFF310581), CircleShape)
-                        .align(Alignment.CenterEnd)
-                        .offset(x = 8.dp)
-                )
-            }
 
-            Spacer(Modifier.height(14.dp))
 
-            // Bottom row
+            Spacer(Modifier.height(8.dp))
+
+
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
 
                 Box(
                     modifier = Modifier
                         .background(
-                            Color(0xFFFAC01B).copy(alpha = 0.25f),
-                            RoundedCornerShape(16.dp)
+                            if (isDelayed)
+                                Color(0xFFFAC01B)
+                            else
+                                Color(0xFF11D244),
+                            RoundedCornerShape(18.dp)
                         )
-                        .padding(horizontal = 14.dp, vertical = 6.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        response.prediction,
+                        text = response.prediction,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                        color = Color(0xFFFAC01B)
+                        fontSize = 13.sp,
+                        color = Color.White
                     )
                 }
 
                 Spacer(Modifier.weight(1f))
 
+
                 Text(
-                    "$probabilityPercent%",
+                    text = "$probabilityPercent%",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    color = Color(0xFFF8D503)
+                    fontSize = 22.sp,
+                    color = Color(0xFFFFEB3B)
                 )
             }
         }
     }
 }
+
 
 
 
