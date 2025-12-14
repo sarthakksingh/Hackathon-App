@@ -10,17 +10,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.net.UnknownHostException
 import javax.inject.Inject
-import retrofit2.HttpException
 
 @HiltViewModel
 class DelayVm @Inject constructor(
     private val responseRepo: ResponseRepo
 ) : ViewModel() {
 
-    private val _flightState = MutableStateFlow<UiState<Response>>(UiState.Loading)
+    private val _flightState = MutableStateFlow<UiState<Response>>(UiState.Idle)
     val flightState = _flightState.asStateFlow()
+    private var lastRequest: Request? = null
 
     fun fetchFlightDetails(origin: String, destination: String, timeDate: String) {
         viewModelScope.launch {
@@ -31,6 +32,7 @@ class DelayVm @Inject constructor(
                     destination = destination,
                     timeDate = timeDate
                 )
+                lastRequest = request
 
                 val response = responseRepo.getFlightDetails(request)
 
@@ -47,6 +49,12 @@ class DelayVm @Inject constructor(
                 _flightState.value =
                     UiState.Error(e.message ?: "Something went wrong")
             }
+        }
+    }
+
+    fun retryLastRequest() {
+        lastRequest?.let {
+            fetchFlightDetails(it.origin, it.destination, it.timeDate)
         }
     }
 }

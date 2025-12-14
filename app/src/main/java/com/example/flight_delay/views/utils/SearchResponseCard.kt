@@ -38,7 +38,7 @@ fun SearchResponseCard(
     val probabilityPercent = (response.probability * 100).toInt()
     val isDelayed = response.prediction.equals("Delayed", ignoreCase = true)
 
-    val screenBg = Color(0xFF310581)
+
     val cardBg = Color(0xFFB091D5)
     Card(
         modifier = Modifier
