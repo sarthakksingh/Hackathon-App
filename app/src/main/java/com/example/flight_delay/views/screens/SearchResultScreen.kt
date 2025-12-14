@@ -14,51 +14,31 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flight_delay.R
-import com.example.flight_delay.data.model.InputUsed
-import com.example.flight_delay.data.model.Response
+import com.example.flight_delay.ui.state.UiStateHandler
 import com.example.flight_delay.views.utils.SearchResponseCard
-import kotlinx.coroutines.delay
+import com.example.flight_delay.vm.DelayVm
 
 @Composable
 fun SearchResultScreen(
+    viewModel: DelayVm,
     onBackClick: () -> Unit
 ) {
-
-    // 🔹 Loading state
-    var isLoading by remember { mutableStateOf(true) }
-
-    // 🔹 Simulate API delay
-    LaunchedEffect(Unit) {
-        delay(2000) // ⏳ 2 seconds
-        isLoading = false
-    }
-
-    val mockResponse = Response(
-        prediction = "Delayed",
-        probability = 0.78,
-        input_used = InputUsed(
-            airline = "IndiGo",
-            origin = "DEL",
-            destination = "BOM"
-        )
-    )
+    val state by viewModel.flightState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -104,73 +84,33 @@ fun SearchResultScreen(
             Spacer(Modifier.height(24.dp))
 
 
-            SearchResponseCard(response = mockResponse)
-        }
-    }
-}
+            UiStateHandler(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
-    name = "Search Result Screen"
-)
-@Composable
-fun SearchResultScreenPreview() {
+                onSuccess = { response ->
 
-    // Mock response for preview
-    val mockResponse = Response(
-        prediction = "Delayed",
-        probability = 0.78,
-        input_used = InputUsed(
-            airline = "IndiGo",
-            origin = "DEL",
-            destination = "BOM"
-        )
-    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState())
+                    ) {
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF310581))
-            .padding(horizontal = 16.dp, vertical = 36.dp)
-    ) {
+                        response.predictions.forEach { prediction ->
 
-        Column {
+                            SearchResponseCard(
+                                origin = response.origin,
+                                destination = response.destination,
+                                prediction = prediction
+                            )
+                        }
+                    }
+                },
 
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = R.drawable.back),
-                    contentDescription = null,
-                    modifier = Modifier.size(32.dp)
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    text = "Search Result",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-
-            Image(
-                painter = painterResource(id = R.drawable.world),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
+                onRetry = {
+                    viewModel.retryLastRequest()
+                }
             )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-
-            SearchResponseCard(response = mockResponse)
         }
     }
 }

@@ -5,4 +5,13 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class FlightDelay: Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+
+
+
+    }
+
+
 }

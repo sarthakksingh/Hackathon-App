@@ -21,14 +21,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flight_delay.R
 import com.example.flight_delay.views.utils.SearchInputCard
+import com.example.flight_delay.vm.DelayVm
 
 @Composable
 fun SearchScreen(
+    viewModel: DelayVm,
     onBackClick: () -> Unit,
     onCheckDelay: () -> Unit
 ) {
@@ -80,7 +81,19 @@ fun SearchScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
 
-            SearchInputCard(onCheckDelayClick = onCheckDelay)
+
+            SearchInputCard { origin, destination, dateTime ->
+
+
+                viewModel.fetchFlightDetails(
+                    origin = origin,
+                    destination = destination,
+                    timeDate = dateTime
+                )
+
+
+                onCheckDelay()
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 

@@ -28,7 +28,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flight_delay.R
@@ -45,7 +44,11 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchInputCard(
-    onCheckDelayClick: () -> Unit
+    onCheckDelayClick: (
+        origin: String,
+        destination: String,
+        timeDate: String
+    ) -> Unit
 ) {
     var origin by remember { mutableStateOf("") }
     var destination by remember { mutableStateOf("") }
@@ -157,7 +160,7 @@ fun SearchInputCard(
 
             OutlinedTextField(
                 value = departureText,
-                onValueChange = { /* dialogs only */ },
+                onValueChange = { departureText = it },
                 readOnly = true,
                 label = { Text("Departure Date & Time") },
                 leadingIcon = {
@@ -190,7 +193,13 @@ fun SearchInputCard(
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
-                onClick = onCheckDelayClick,
+                onClick = {
+                    onCheckDelayClick(
+                        origin.trim(),
+                        destination.trim(),
+                        departureText.trim()
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
