@@ -39,7 +39,7 @@ fun AppNavHost() {
                 viewModel = vm,
                 onBackClick = { navController.popBackStack()},
                 onCheckDelay = {
-                    navController.navigate("result")
+                    navController.navigate(NavRoute.SearchResult.route)
                 }
             )
         }
