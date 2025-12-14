@@ -24,19 +24,21 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flight_delay.R
-import com.example.flight_delay.data.model.InputUsed
-import com.example.flight_delay.data.model.Response
+import com.example.flight_delay.data.model.Prediction
 
 @Composable
 fun SearchResponseCard(
-    response: Response
+    prediction: Prediction,
+    origin: String,
+    destination: String
 ) {
-    val probabilityPercent = (response.probability * 100).toInt()
-    val isDelayed = response.prediction.equals("Delayed", ignoreCase = true)
+    //val probabilityPercent = (response.probability * 100).toInt()
+
+    val isDelayed = prediction.prediction.equals("Delayed", ignoreCase = true)
+
 
 
     val cardBg = Color(0xFFB091D5)
@@ -58,7 +60,7 @@ fun SearchResponseCard(
 
 
             Image(
-                painter = painterResource(airlineLogo(response.input_used.airline)),
+                painter = painterResource(airlineLogo(prediction.airline)),
                 contentDescription = null,
                 modifier = Modifier.size(100.dp)
             )
@@ -72,12 +74,12 @@ fun SearchResponseCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = response.input_used.origin,
+                    text = origin,
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp
                 )
                 Text(
-                    text = response.input_used.destination,
+                    text = destination,
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp
                 )
@@ -131,7 +133,7 @@ fun SearchResponseCard(
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = response.prediction,
+                        text = prediction.prediction,
                         fontWeight = FontWeight.Bold,
                         fontSize = 13.sp,
                         color = Color.White
@@ -142,7 +144,7 @@ fun SearchResponseCard(
 
 
                 Text(
-                    text = "$probabilityPercent%",
+                    text = "${prediction.delay_probability_percent.toInt()}%",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
                     color = Color(0xFFFFEB3B)
@@ -155,19 +157,3 @@ fun SearchResponseCard(
 
 
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ResponseCardPreview() {
-
-    SearchResponseCard(
-        response = Response(
-            prediction = "Delayed",
-            probability = 0.78,
-            input_used = InputUsed(
-                airline = "IndiGo",
-                origin = "DEL",
-                destination = "BOM"
-            )
-        )
-    )
-}
