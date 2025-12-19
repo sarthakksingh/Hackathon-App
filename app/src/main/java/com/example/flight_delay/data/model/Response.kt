@@ -4,8 +4,7 @@ package com.example.flight_delay.data.model
 data class Response(
     val origin: String,
     val destination: String,
-    val predictions: List<Prediction>,
-
+    val predictions: List<Prediction>
 )
 
 data class Prediction(

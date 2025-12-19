@@ -26,7 +26,9 @@ import androidx.compose.ui.unit.sp
 import com.example.flight_delay.R
 
 @Composable
-fun OnboardingScreen(onGetStarted: () -> Unit) {
+fun OnboardingScreen(
+    onGetStarted: () -> Unit,
+) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -86,7 +88,7 @@ fun OnboardingScreen(onGetStarted: () -> Unit) {
 
 
             Button(
-                onClick = onGetStarted,
+                onClick = {onGetStarted()},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp),
@@ -105,12 +107,3 @@ fun OnboardingScreen(onGetStarted: () -> Unit) {
         }
     }
 }
-
-
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun ProfileScreenPreview() {
-//
-//        OnboardingScreen()
-//}

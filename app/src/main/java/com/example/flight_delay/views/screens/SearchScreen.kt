@@ -59,7 +59,7 @@ fun SearchScreen(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = "Search Result",
+                    text = "Flight Delay Check",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -83,15 +83,11 @@ fun SearchScreen(
 
 
             SearchInputCard { origin, destination, dateTime ->
-
-
                 viewModel.fetchFlightDetails(
                     origin = origin,
                     destination = destination,
                     timeDate = dateTime
                 )
-
-
                 onCheckDelay()
             }
 

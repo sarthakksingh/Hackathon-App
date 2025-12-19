@@ -4,11 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 data class Request(
     @SerializedName("origin")
-    val origin:String,
+    val origin: String,
 
     @SerializedName("destination")
     val destination: String,
 
-    @SerializedName("timeDate")
+    @SerializedName("scheduled_dep")
     val timeDate: String
 )
+

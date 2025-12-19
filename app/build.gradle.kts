@@ -107,6 +107,9 @@ dependencies {
     // calendar & clock modules
     implementation("com.maxkeppeler.sheets-compose-dialogs:calendar:1.3.0")
     implementation("com.maxkeppeler.sheets-compose-dialogs:clock:1.3.0")
+
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.36.0")
+
 }
 fun getBaseUrlInCIEnvironment(): String {
     val propFile = rootProject.file("local.properties")

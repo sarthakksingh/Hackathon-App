@@ -1,5 +1,6 @@
 package com.example.flight_delay.vm
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flight_delay.data.model.Request
@@ -24,30 +25,25 @@ class DelayVm @Inject constructor(
     private var lastRequest: Request? = null
 
     fun fetchFlightDetails(origin: String, destination: String, timeDate: String) {
+        Log.d("DelayVm", "fetchFlightDetails called: $origin -> $destination, $timeDate")
         viewModelScope.launch {
+            Log.d("DelayVm", "Launching coroutine")
             _flightState.value = UiState.Loading
             try {
-                val request = Request(
-                    origin = origin,
-                    destination = destination,
-                    timeDate = timeDate
-                )
-                lastRequest = request
+                val request = Request(origin, destination, timeDate)
+                Log.d("DelayVm", "Request created: $request")
 
                 val response = responseRepo.getFlightDetails(request)
+                Log.d("DelayVm", "Repo returned: $response")
 
                 if (response != null) {
                     _flightState.value = UiState.Success(response)
                 } else {
                     _flightState.value = UiState.Error("Failed to fetch flight details")
                 }
-            } catch (e: UnknownHostException) {
-                _flightState.value = UiState.NoInternet
-            } catch (e: HttpException) {
-                _flightState.value = UiState.ServerError
             } catch (e: Exception) {
-                _flightState.value =
-                    UiState.Error(e.message ?: "Something went wrong")
+                Log.e("DelayVm", "Error: ${e.message}", e)
+                _flightState.value = UiState.Error(e.message ?: "Something went wrong")
             }
         }
     }

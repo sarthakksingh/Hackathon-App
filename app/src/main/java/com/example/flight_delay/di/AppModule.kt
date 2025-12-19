@@ -47,6 +47,4 @@ object AppModule {
         return retrofit.create(ResponseApi::class.java)
     }
 
-
-
 }

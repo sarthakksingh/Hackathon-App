@@ -12,10 +12,17 @@ class ResponseRepo @Inject constructor(
 
     suspend fun getFlightDetails(request: Request): Response? {
         return try {
-            responseApi.getDetails(request)
+            Log.d("ResponseRepo", "Calling API with: $request")
+            val response = responseApi.getDetails(request)
+            Log.d("ResponseRepo", "API Success: ${response.origin}")
+            response
+        } catch (e: retrofit2.HttpException) {
+            Log.e("ResponseRepo", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}", e)
+            null
         } catch (e: Exception) {
-            Log.e("ResponseRepo", "Failed to fetch flight details", e)
+            Log.e("ResponseRepo", "Failed to fetch flight details: ${e.message}", e)
             null
         }
     }
+
 }

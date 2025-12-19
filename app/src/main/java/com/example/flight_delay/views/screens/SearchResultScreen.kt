@@ -1,6 +1,13 @@
 package com.example.flight_delay.views.screens
 
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,10 +25,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -39,17 +51,24 @@ fun SearchResultScreen(
     onBackClick: () -> Unit
 ) {
     val state by viewModel.flightState.collectAsState()
+    val scrollState = rememberScrollState()
+
+    // Smooth image collapse based on scroll position
+    val imageHeightFraction by animateFloatAsState(
+        targetValue = (1f - (scrollState.value / 300f).coerceIn(0f, 1f)),
+        label = "imageHeight"
+    )
+
+    Log.d("SearchResultScreen", "State: ${state.javaClass.simpleName}, Scroll: ${scrollState.value}, ImageHeight: ${imageHeightFraction}")
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF310581)) // same background
+            .background(Color(0xFF310581))
             .padding(horizontal = 16.dp, vertical = 36.dp)
     ) {
-
-        Column {
-
-
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Header (always visible)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
                     painter = painterResource(id = R.drawable.back),
@@ -58,9 +77,7 @@ fun SearchResultScreen(
                         .size(32.dp)
                         .clickable { onBackClick() }
                 )
-
                 Spacer(Modifier.width(8.dp))
-
                 Text(
                     text = "Search Result",
                     fontSize = 18.sp,
@@ -71,47 +88,42 @@ fun SearchResultScreen(
 
             Spacer(Modifier.height(16.dp))
 
-
+            // Collapsing World Image (smooth height + alpha animation)
             Image(
                 painter = painterResource(id = R.drawable.world),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height((200 * imageHeightFraction).dp)
+                    .alpha(imageHeightFraction.coerceAtLeast(0.3f))
             )
 
-            Spacer(Modifier.height(24.dp))
-
+            Spacer(modifier = Modifier.height((24 * imageHeightFraction).dp))
 
             UiStateHandler(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.weight(1f),
                 state = state,
-
                 onSuccess = { response ->
-
                     Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .verticalScroll(rememberScrollState())
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)  // Connected to scroll detection
                     ) {
-
-                        response.predictions.forEach { prediction ->
-
+                        response.predictions.forEachIndexed { index, prediction ->
                             SearchResponseCard(
                                 origin = response.origin,
                                 destination = response.destination,
                                 prediction = prediction
                             )
+                            if (index < response.predictions.size - 1) {
+                                Spacer(modifier = Modifier.height(12.dp))
+                            }
                         }
                     }
                 },
-
-                onRetry = {
-                    viewModel.retryLastRequest()
-                }
+                onRetry = { viewModel.retryLastRequest() }
             )
         }
     }
 }
-

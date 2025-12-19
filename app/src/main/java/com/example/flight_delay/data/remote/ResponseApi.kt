@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 interface ResponseApi {
-    @POST("getDetails")
+    @POST("predict")
     suspend fun getDetails(
         @Body request: Request
     ): Response
